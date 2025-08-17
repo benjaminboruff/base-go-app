@@ -33,7 +33,7 @@ main
 # OS X generated file
 .DS_Store
 
-
+/ui/dist/*
 # Tailwind CSS
 cmd/web/assets/css/output.css
 tailwindcss

@@ -13,6 +13,7 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+node_modules/
 
 # Go workspace file
 go.work
@@ -32,7 +33,7 @@ main
 # OS X generated file
 .DS_Store
 
-
+ui/dist/
 # Tailwind CSS
 cmd/web/assets/css/output.css
 tailwindcss

@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func home(w http.ResponseWriter, r *http.Request) {
+func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "Go")
 
 	// Use the template.ParseFiles() function to read the template file into a
@@ -21,9 +21,9 @@ func home(w http.ResponseWriter, r *http.Request) {
 	// to note that the file containing our base template must be the *first*
 	// file in the slice.
 	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/home.tmpl",
+		app.HTMLDir + "/base.tmpl",
+		app.HTMLDir + "/partials/nav.tmpl",
+		app.HTMLDir + "/pages/home.tmpl",
 	}
 
 	ts, err := template.ParseFiles(files...)
@@ -45,8 +45,8 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// profileView handler
-func profileView(w http.ResponseWriter, r *http.Request) {
+// ProfileView handler
+func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil || id < 1 {
 		http.NotFound(w, r)
@@ -56,13 +56,13 @@ func profileView(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Display a specific profile with ID %d", id)
 }
 
-// profileCreate handler
-func profileCreate(w http.ResponseWriter, r *http.Request) {
+// ProfileCreate handler
+func (app *App) ProfileCreate(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Display a form for creating a new profile ..."))
 }
 
-// profileCreatePost handler
-func profileCreatePost(w http.ResponseWriter, r *http.Request) {
+// ProfileCreatePost handler
+func (app *App) ProfileCreatePost(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Save a new profile ..."))
 }

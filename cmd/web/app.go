@@ -1,9 +1,15 @@
 package main
 
-// App defines a struct to hold applications-wide dependencies and
+import (
+	"github.com/benjaminboruff/base-go-app/internal/models"
+)
+
+// App defines a struct to hold
+// applications-wide dependencies and
 // application settings.
 type App struct {
-	Addr    string
-	HTMLDir string
-	DistDir string
+	Addr     string
+	Database *models.Database
+	HTMLDir  string
+	DistDir  string
 }

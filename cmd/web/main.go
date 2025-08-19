@@ -32,7 +32,6 @@ func connect(dsn string, new_db *models.Database) *models.Database {
 		log.Fatal()
 	}
 
-	fmt.Println("Am I here?")
 	new_db.DB = db
 
 	return new_db

@@ -20,7 +20,7 @@ tmp_dir = "tmp"
   poll = false
   poll_interval = 0
   post_cmd = []
-  pre_cmd = ["cp ui/static/img/* ui/dist", "cp ui/static/css/main.css ui/dist", "bun build ui/static/js/main.js --outfile ui/dist/bundle.min.js --minify --target=browser"]
+  pre_cmd = ["mkdir -p ui/dist", "cp -r ui/static/img ui/dist", "cp ui/static/css/main.css ui/dist", "bun build ui/static/js/main.js --outfile ui/dist/bundle.min.js --minify --target=browser"]
   rerun = false
   rerun_delay = 500
   send_interrupt = false

@@ -14,7 +14,10 @@ type User struct {
 }
 
 func (u *User) Create(db *Database) error {
-	var err error
-	_, err = db.DB.Exec("INSERT INTO users (first_name, middle_name, last_name, email, password) VALUES (?, ?, ?, ?, ?)", u.FirstName, u.MiddleName, u.LastName, u.Email, u.Password)
+
+	stmt := "INSERT INTO users (first_name, middle_name, last_name, email, password) VALUES (?, ?, ?, ?, ?)"
+
+	_, err := db.DB.Exec(stmt, u.FirstName, u.MiddleName, u.LastName, u.Email, u.Password)
+
 	return err
 }

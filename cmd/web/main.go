@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/benjaminboruff/base-go-app/internal/models"
@@ -12,8 +11,17 @@ import (
 func main() {
 
 	dsn := "./base-go-app.db"
+
 	db := connect(dsn, &models.Database{})
-	db.InitDB()
+	err := db.InitDB()
+	if err != nil {
+		log.Fatal((err))
+	}
+
+	err = db.Seed()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	app := &App{
 		Addr:     ":8080",

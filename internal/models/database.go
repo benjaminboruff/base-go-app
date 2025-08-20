@@ -2,7 +2,7 @@ package models
 
 import (
 	"database/sql"
-	"log"
+	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -26,8 +26,13 @@ func (db *Database) InitDB() error {
 	_, err = db.DB.Exec(createTableSQL)
 
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
+
+	return err
+}
+
+func (db *Database) Seed() error {
 
 	u := User{}
 	u.Email = "dude@gmail.com"
@@ -36,9 +41,9 @@ func (db *Database) InitDB() error {
 	u.MiddleName = "Q"
 	u.Password = "12345678"
 
-	err = u.Create(db)
+	err := u.Create(db)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 
 	return err

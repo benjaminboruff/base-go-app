@@ -1,25 +1,28 @@
 package main
 
 import (
-	"database/sql"
 	"log"
 
 	"github.com/benjaminboruff/base-go-app/internal/models"
+	"github.com/benjaminboruff/base-go-app/internal/utils"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
 
 	dsn := "./base-go-app.db"
-
-	db := connect(dsn)
-
+	connection := utils.Connect(dsn)
+	db := &models.Database{Connection: connection}
 	// Defer the closing of the database connection
 	defer db.Close()
 
 	err := db.CreateUsersTable()
 	if err != nil {
-		log.Fatal((err))
+		// If the users table cannot be created
+		// then crash, cuz something bad is afoot!
+		log.Println("Cannot create users table. Time to die!")
+		log.Fatal(err)
+
 	}
 
 	err = db.Seed()
@@ -35,16 +38,4 @@ func main() {
 	}
 
 	app.RunServer()
-}
-
-func connect(dsn string) *models.Database {
-	db, err := sql.Open("sqlite3", dsn)
-
-	// This will not be a connection error, but a DSN
-	// parse error or another initialization error.
-	if err != nil {
-		log.Fatal()
-	}
-
-	return &models.Database{db}
 }

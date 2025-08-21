@@ -41,7 +41,19 @@ func (db *Database) Seed() error {
 	user.FirstName = "Dude"
 	user.LastName = "Erino"
 	user.MiddleName = "Q"
-	user.Password = "12345678"
+
+	hashed_password, err := user.GeneratePasswordHash("12345678")
+	if err != nil {
+		log.Println("Password hashing error!")
+	} else {
+		password_check, _ := user.ComparePasswordAndHash("12345678", hashed_password)
+		if password_check == true {
+			user.Password = hashed_password
+		} else {
+			log.Fatal("Passwords do not match. Time to die!")
+		}
+	}
+
 	user.CreatedAt = time.Now().UTC()
 
 	id, err := user.Create(db)

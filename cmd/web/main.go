@@ -3,9 +3,8 @@ package main
 import (
 	"database/sql"
 	"github.com/benjaminboruff/base-go-app/internal/models"
-	"log"
-	// "github.com/benjaminboruff/base-go-app/internal/utils"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 type Env struct {
@@ -23,9 +22,6 @@ func main() {
 	env := &Env{
 		users: models.UserModel{DB: db},
 	}
-	// connection := utils.Connect(dsn)
-	// db := &models.Database{Connection: connection}
-	// Defer the closing of the database connection
 	defer env.users.Close()
 
 	err = env.users.CreateUsersTable()
@@ -36,10 +32,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// err = db.Seed()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
+	err = env.users.SeedUsers()
+	if err != nil {
+		log.Println(err)
+	}
 
 	app := &App{
 		Addr:     ":8080",

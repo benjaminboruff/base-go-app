@@ -2,13 +2,13 @@ package main
 
 import (
 	"database/sql"
-	"github.com/benjaminboruff/base-go-app/internal/database"
+	"github.com/benjaminboruff/base-go-app/internal/models"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 )
 
 type Env struct {
-	users database.UserModel
+	users models.UserModel
 }
 
 func main() {
@@ -20,7 +20,7 @@ func main() {
 	}
 
 	env := &Env{
-		users: database.UserModel{DB: db},
+		users: models.UserModel{DB: db},
 	}
 	defer env.users.Close()
 
@@ -36,6 +36,10 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
+
+	allUsers, _ := env.users.All()
+
+	log.Println(allUsers)
 
 	app := &App{
 		Addr:     ":8080",

@@ -1,31 +1,18 @@
 package database
 
 import (
-	"crypto/subtle"
 	"database/sql"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"github.com/benjaminboruff/base-go-app/internal/models"
 	"github.com/benjaminboruff/base-go-app/internal/utils"
 	"log"
-	"strings"
 	"time"
-
-	"golang.org/x/crypto/argon2"
 )
 
 type UserModel struct {
 	DB *sql.DB
 }
-
-// type Argon2Params struct {
-// 	memory      uint32
-// 	iterations  uint32
-// 	parallelism uint8
-// 	saltLength  uint32
-// 	keyLength   uint32
-// }
 
 var (
 	ErrUserNotFound       = errors.New("models: user not found")
@@ -141,7 +128,7 @@ func (u UserModel) VerifyUser(email, password string) (bool, error) {
 		return false, err
 	}
 
-	valid, err := comparePasswordAndHash(password, hashedPassword)
+	valid, err := utils.ComparePasswordAndHash(password, hashedPassword)
 
 	if valid != true {
 		return false, ErrInvalidCredentials
@@ -157,30 +144,30 @@ func (u UserModel) VerifyUser(email, password string) (bool, error) {
 // UserModel utils
 // ***************
 
-func comparePasswordAndHash(password, hash string) (bool, error) {
-	parts := strings.Split(hash, "$")
-	if len(parts) != 6 {
-		return false, errors.New("invalid hash format")
-	}
+// func comparePasswordAndHash(password, hash string) (bool, error) {
+// 	parts := strings.Split(hash, "$")
+// 	if len(parts) != 6 {
+// 		return false, errors.New("invalid hash format")
+// 	}
 
-	params := &utils.Argon2Params{}
-	_, err := fmt.Sscanf(parts[3], "m=%d,t=%d,p=%d", &params.Memory, &params.Iterations, &params.Parallelism)
-	if err != nil {
-		return false, err
-	}
+// 	params := &utils.Argon2Params{}
+// 	_, err := fmt.Sscanf(parts[3], "m=%d,t=%d,p=%d", &params.Memory, &params.Iterations, &params.Parallelism)
+// 	if err != nil {
+// 		return false, err
+// 	}
 
-	salt, err := base64.RawStdEncoding.DecodeString(parts[4])
-	if err != nil {
-		return false, err
-	}
+// 	salt, err := base64.RawStdEncoding.DecodeString(parts[4])
+// 	if err != nil {
+// 		return false, err
+// 	}
 
-	decodedHash, err := base64.RawStdEncoding.DecodeString(parts[5])
-	if err != nil {
-		return false, err
-	}
-	params.KeyLength = uint32(len(decodedHash))
+// 	decodedHash, err := base64.RawStdEncoding.DecodeString(parts[5])
+// 	if err != nil {
+// 		return false, err
+// 	}
+// 	params.KeyLength = uint32(len(decodedHash))
 
-	comparisonHash := argon2.IDKey([]byte(password), salt, params.Iterations, params.Memory, params.Parallelism, params.KeyLength)
+// 	comparisonHash := argon2.IDKey([]byte(password), salt, params.Iterations, params.Memory, params.Parallelism, params.KeyLength)
 
-	return (subtle.ConstantTimeCompare(decodedHash, comparisonHash) == 1), nil
-}
+// 	return (subtle.ConstantTimeCompare(decodedHash, comparisonHash) == 1), nil
+// }

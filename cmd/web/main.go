@@ -32,10 +32,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = env.users.SeedUsers()
-	if err != nil {
-		log.Println(err)
-	}
+	// err = env.users.SeedUsers()
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 
 	allUsers, _ := env.users.All()
 

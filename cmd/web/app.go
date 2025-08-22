@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/benjaminboruff/base-go-app/internal/models"
+	"database/sql"
+	// "github.com/benjaminboruff/base-go-app/internal/models"
 )
 
 // App defines a struct to hold
@@ -9,7 +10,7 @@ import (
 // application settings.
 type App struct {
 	Addr     string
-	Database *models.Database
+	Database *sql.DB
 	HTMLDir  string
 	DistDir  string
 }

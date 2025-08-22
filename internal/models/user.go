@@ -3,6 +3,7 @@ package models
 import (
 	"crypto/rand"
 	"crypto/subtle"
+	"database/sql"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -20,6 +21,10 @@ type User struct {
 	Email      string
 	Password   string
 	CreatedAt  time.Time
+}
+
+type UserModel struct {
+	DB *sql.DB
 }
 
 type Argon2Params struct {
@@ -56,7 +61,7 @@ func (u *User) GeneratePasswordHash(password string) (string, error) {
 	return fullHash, nil
 }
 
-func (u *User) ComparePasswordAndHash(password, hash string) (bool, error) {
+func ComparePasswordAndHash(password, hash string) (bool, error) {
 	parts := strings.Split(hash, "$")
 	if len(parts) != 6 {
 		return false, errors.New("invalid hash format")

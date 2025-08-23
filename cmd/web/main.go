@@ -37,13 +37,14 @@ func main() {
 	// 	log.Println(err)
 	// }
 
-	allUsers, _ := env.users.All()
+	//	allUsers, _ := env.users.All()
 
-	log.Println(allUsers)
+	// log.Println(allUsers)
 
 	app := &App{
 		Addr:     ":8080",
 		Database: db,
+		Env:      env,
 		HTMLDir:  "./ui/html",
 		DistDir:  "./ui/dist",
 	}

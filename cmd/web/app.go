@@ -11,6 +11,7 @@ import (
 type App struct {
 	Addr     string
 	Database *sql.DB
+	Env      *Env
 	HTMLDir  string
 	DistDir  string
 }

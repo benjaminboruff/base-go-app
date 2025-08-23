@@ -82,27 +82,24 @@ func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 	// leave as nil.}
 
 	id, err := strconv.Atoi(r.PathValue("id"))
-	user := Foo{
-		Id: id,
-	}
-
+	// user := Foo{
+	// 	Id: id,
+	// }
+	user, err := app.Env.users.ShowUser(id)
 	if err != nil || id < 1 {
+		log.Print(err.Error())
 		http.NotFound(w, r)
 		return
 	}
+
+	log.Println(user)
+
 	err = ts.ExecuteTemplate(w, "base", user)
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	// id, err := strconv.Atoi(r.PathValue("id"))
-	// if err != nil || id < 1 {
-	// 	http.NotFound(w, r)
-	// 	return
-	// }
-
-	// fmt.Fprintf(w, "Display a specific profile with ID %d", id)
 }
 
 // ProfileCreate handler

@@ -180,7 +180,7 @@ func (u UserModel) VerifyUser(email, password string) (bool, error) {
 // user table as roows.
 
 func (u UserModel) All() ([]User, error) {
-	rows, err := u.DB.Query("SELECT first_name, middle_name, last_name FROM users;")
+	rows, err := u.DB.Query("SELECT first_name, middle_name, last_name, email FROM users;")
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +190,7 @@ func (u UserModel) All() ([]User, error) {
 
 	for rows.Next() {
 		var user User
-		err := rows.Scan(&user.FirstName, &user.MiddleName, &user.LastName)
+		err := rows.Scan(&user.FirstName, &user.MiddleName, &user.LastName, &user.Email)
 		if err != nil {
 			return nil, err
 		}
@@ -202,4 +202,25 @@ func (u UserModel) All() ([]User, error) {
 	}
 
 	return users, nil
+}
+
+// Given a user id
+// Lookup the user
+// and return the user
+// data if found
+
+func (u UserModel) ShowUser(id int) (User, error) {
+
+	var user User
+
+	row := u.DB.QueryRow("SELECT first_name, middle_name, last_name, email FROM users WHERE id = ?", id)
+	err := row.Scan(&user.FirstName, &user.MiddleName, &user.LastName, &user.Email)
+
+	if err == sql.ErrNoRows {
+		return user, ErrUserNotFound
+	} else if err != nil {
+		return user, err
+	}
+
+	return user, err
 }

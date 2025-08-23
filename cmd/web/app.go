@@ -1,9 +1,17 @@
 package main
 
-// App defines a struct to hold applications-wide dependencies and
+import (
+	"database/sql"
+)
+
+// App defines a struct to hold
+// applications-wide dependencies and
 // application settings.
+
 type App struct {
-	Addr    string
-	HTMLDir string
-	DistDir string
+	Addr     string
+	Database *sql.DB
+	Env      *Env
+	HTMLDir  string
+	DistDir  string
 }

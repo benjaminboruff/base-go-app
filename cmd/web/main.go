@@ -8,7 +8,15 @@ import (
 )
 
 type Env struct {
-	users models.UserModel
+	users interface {
+		All() ([]models.User, error)
+		Close()
+		CreateTable() error
+		Show(int) (models.User, error)
+		Seed() error
+		Create(models.User) (int64, error)
+		Verify(string, string) (bool, error)
+	}
 }
 
 func main() {
@@ -24,7 +32,7 @@ func main() {
 	}
 	defer env.users.Close()
 
-	err = env.users.CreateUsersTable()
+	err = env.users.CreateTable()
 	if err != nil {
 		// If the users table cannot be created
 		// then crash, cuz something bad is afoot!
@@ -36,10 +44,6 @@ func main() {
 	// if err != nil {
 	// 	log.Println(err)
 	// }
-
-	//	allUsers, _ := env.users.All()
-
-	// log.Println(allUsers)
 
 	app := &App{
 		Addr:     ":8080",

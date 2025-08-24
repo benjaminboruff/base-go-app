@@ -1,16 +1,11 @@
 package main
 
 import (
-	// "fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"strconv"
 )
-
-type Foo struct {
-	Id int
-}
 
 func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "Go")
@@ -54,15 +49,6 @@ func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Server", "Go")
 
-	// Use the template.ParseFiles() function to read the template file into a
-	// template set. If there's an error, we log the detailed error message, use
-	// the http.Error() function to send an Internal Server Error response to the
-	// user, and then return from the handler so no subsequent code is executed.
-	// ts, err := template.ParseFiles("./ui/html/pages/home.tmpl")
-
-	// Initialize a slice containing the paths to the two files. It's important
-	// to note that the file containing our base template must be the *first*
-	// file in the slice.
 	files := []string{
 		app.HTMLDir + "/base.tmpl",
 		app.HTMLDir + "/partials/nav.tmpl",
@@ -76,23 +62,13 @@ func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Then we use the Execute() method on the template set to write the
-	// template content as the response body. The last parameter to Execute()
-	// represents any dynamic data that we want to pass in, which for now we'll
-	// leave as nil.}
-
 	id, err := strconv.Atoi(r.PathValue("id"))
-	// user := Foo{
-	// 	Id: id,
-	// }
-	user, err := app.Env.users.ShowUser(id)
+	user, err := app.Env.users.Show(id)
 	if err != nil || id < 1 {
 		log.Print(err.Error())
 		http.NotFound(w, r)
 		return
 	}
-
-	log.Println(user)
 
 	err = ts.ExecuteTemplate(w, "base", user)
 	if err != nil {

@@ -62,7 +62,7 @@ func (u *User) GeneratePasswordHash(password string) error {
 // DB directly
 // *****************
 
-func (u UserModel) CreateUsersTable() error {
+func (u UserModel) CreateTable() error {
 	var err error
 
 	// Create users table
@@ -84,7 +84,7 @@ func (u UserModel) CreateUsersTable() error {
 	return err
 }
 
-func (u UserModel) SeedUsers() error {
+func (u UserModel) Seed() error {
 
 	passwordFromForm := "12345678"
 	user := User{}
@@ -105,10 +105,9 @@ func (u UserModel) SeedUsers() error {
 		return err
 	} else {
 		log.Printf("The newly created user's id is: %d", id)
-		// return nil
 	}
 	// verify info from form submission
-	verified, err := u.VerifyUser("dude@gmail.com", "12345678")
+	verified, err := u.Verify("dude@gmail.com", "12345678")
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -151,7 +150,7 @@ func (u UserModel) Create(user User) (int64, error) {
 // verify that the user exists and
 // has the correct password
 
-func (u UserModel) VerifyUser(email, password string) (bool, error) {
+func (u UserModel) Verify(email, password string) (bool, error) {
 
 	var id int
 	var hashedPassword string
@@ -209,7 +208,7 @@ func (u UserModel) All() ([]User, error) {
 // and return the user
 // data if found
 
-func (u UserModel) ShowUser(id int) (User, error) {
+func (u UserModel) Show(id int) (User, error) {
 
 	var user User
 

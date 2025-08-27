@@ -5,6 +5,9 @@ import (
 	"github.com/benjaminboruff/base-go-app/internal/models"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
+	"time"
+
+	"github.com/alexedwards/scs/v2"
 )
 
 type Env struct {
@@ -20,6 +23,9 @@ type Env struct {
 }
 
 func main() {
+
+	sessionManager := scs.New()
+	sessionManager.Lifetime = 24 * time.Hour
 
 	dsn := "./base-go-app.db"
 	db, err := sql.Open("sqlite3", dsn)
@@ -46,11 +52,12 @@ func main() {
 	// }
 
 	app := &App{
-		Addr:     ":8080",
-		Database: db,
-		Env:      env,
-		HTMLDir:  "./ui/html",
-		DistDir:  "./ui/dist",
+		Addr:           ":8080",
+		Database:       db,
+		Env:            env,
+		HTMLDir:        "./ui/html",
+		DistDir:        "./ui/dist",
+		SessionManager: sessionManager,
 	}
 
 	app.RunServer()

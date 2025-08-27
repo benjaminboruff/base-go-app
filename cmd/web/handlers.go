@@ -9,6 +9,7 @@ import (
 
 func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "Go")
+	app.SessionManager.Put(r.Context(), "message", "Hello from a session!")
 
 	// Use the template.ParseFiles() function to read the template file into a
 	// template set. If there's an error, we log the detailed error message, use
@@ -26,6 +27,7 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ts, err := template.ParseFiles(files...)
+
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -48,7 +50,8 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Server", "Go")
-
+	msg := app.SessionManager.GetString(r.Context(), "message")
+	log.Println(msg)
 	files := []string{
 		app.HTMLDir + "/base.tmpl",
 		app.HTMLDir + "/partials/nav.tmpl",

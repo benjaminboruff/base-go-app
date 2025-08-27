@@ -5,6 +5,7 @@ import (
 	"github.com/benjaminboruff/base-go-app/internal/models"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
@@ -26,6 +27,10 @@ func main() {
 
 	sessionManager := scs.New()
 	sessionManager.Lifetime = 24 * time.Hour
+	sessionManager.Cookie.Name = "base-go-app"
+	sessionManager.Cookie.SameSite = http.SameSiteStrictMode
+	sessionManager.Cookie.HttpOnly = true
+	sessionManager.Cookie.Secure = true
 
 	dsn := "./base-go-app.db"
 	db, err := sql.Open("sqlite3", dsn)

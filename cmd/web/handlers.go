@@ -52,6 +52,7 @@ func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "Go")
 	msg := app.SessionManager.GetString(r.Context(), "message")
 	log.Println(msg)
+
 	files := []string{
 		app.HTMLDir + "/base.tmpl",
 		app.HTMLDir + "/partials/nav.tmpl",

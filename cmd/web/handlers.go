@@ -53,6 +53,12 @@ func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 	msg := app.SessionManager.GetString(r.Context(), "message")
 	log.Println(msg)
 
+	if !app.SessionManager.Exists(r.Context(), "currentUserId") {
+		log.Println("Not logged in!")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
 	files := []string{
 		app.HTMLDir + "/base.tmpl",
 		app.HTMLDir + "/partials/nav.tmpl",

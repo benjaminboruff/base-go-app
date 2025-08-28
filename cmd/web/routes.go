@@ -24,5 +24,8 @@ func (app *App) Routes() http.Handler {
 	mux.HandleFunc("GET /profile/create", app.ProfileCreate)
 	mux.HandleFunc("POST /profile/create", app.ProfileCreatePost)
 
+	// Application routes for User
+	mux.HandleFunc("/user/signup", app.SignupUser)
+
 	return app.SessionManager.LoadAndSave(mux)
 }

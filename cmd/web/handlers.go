@@ -7,8 +7,16 @@ import (
 	"strconv"
 )
 
+type PageData struct {
+	Title string
+}
+
 func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "NoneYo")
+
+	data := PageData{
+		Title: "Home",
+	}
 	// app.SessionManager.Put(r.Context(), "message", "Hello from a session!")
 
 	// Use the template.ParseFiles() function to read the template file into a
@@ -39,15 +47,14 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	// represents any dynamic data that we want to pass in, which for now we'll
 	// leave as nil.}
 	if r.Header.Get("Hx-Request") == "true" {
-
-		err = ts.ExecuteTemplate(w, "main", nil)
+		err = ts.ExecuteTemplate(w, "main", data)
 		if err != nil {
 			log.Print(err.Error())
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 	} else {
-		err = ts.ExecuteTemplate(w, "base", nil)
+		err = ts.ExecuteTemplate(w, "base", data)
 		if err != nil {
 			log.Print(err.Error())
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -112,6 +119,10 @@ func (app *App) ProfileCreatePost(w http.ResponseWriter, r *http.Request) {
 func (app *App) SignupUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "NoneYo")
 
+	data := PageData{
+		Title: "Signup",
+	}
+
 	TemplateFiles := []string{
 		app.HTMLDir + "/base.tmpl",
 		app.HTMLDir + "/partials/nav.tmpl",
@@ -126,14 +137,14 @@ func (app *App) SignupUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Header.Get("Hx-Request") == "true" {
-		err = ts.ExecuteTemplate(w, "main", nil)
+		err = ts.ExecuteTemplate(w, "main", data)
 		if err != nil {
 			log.Print(err.Error())
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 	} else {
-		err = ts.ExecuteTemplate(w, "base", nil)
+		err = ts.ExecuteTemplate(w, "base", data)
 		if err != nil {
 			log.Print(err.Error())
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)

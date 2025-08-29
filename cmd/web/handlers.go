@@ -5,12 +5,14 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/benjaminboruff/base-go-app/internal/models"
 )
 
 func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "NoneYo")
 
-	// app.SessionManager.Put(r.Context(), "message", "Hello from a session!")
+	app.SessionManager.Put(r.Context(), "message", "Hello from base-go-app!")
 
 	// Use the template.ParseFiles() function to read the template file into a
 	// template set. If there's an error, we log the detailed error message, use
@@ -38,7 +40,7 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	// Then we use the Execute() method on the template set to write the
 	// template content as the response body. The last parameter to Execute()
 	// represents any dynamic data that we want to pass in, which for now we'll
-	// leave as nil.}
+	// leave as nil.
 	if r.Header.Get("Hx-Request") == "true" {
 		err = ts.ExecuteTemplate(w, "main", nil)
 		if err != nil {
@@ -62,7 +64,7 @@ func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 	msg := app.SessionManager.GetString(r.Context(), "message")
 	log.Println(msg)
 
-	if !app.SessionManager.Exists(r.Context(), "currentUserId") {
+	if !app.SessionManager.Exists(r.Context(), "currentUserID") {
 		log.Println("Not logged in!")
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -141,4 +143,71 @@ func (app *App) SignupUser(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+}
+
+func (app *App) LoginUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Server", "NoneYo")
+
+	if app.SessionManager.Exists(r.Context(), "currentUserId") {
+		log.Println("Already logged in!")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	} else {
+		log.Println(app.SessionManager.GetString(r.Context(), "message"))
+	}
+
+	TemplateFiles := []string{
+		app.HTMLDir + "/base.tmpl",
+		app.HTMLDir + "/partials/nav.tmpl",
+		app.HTMLDir + "/pages/login.tmpl",
+	}
+
+	ts, err := template.ParseFiles(TemplateFiles...)
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	if r.Header.Get("Hx-Request") == "true" {
+		err = ts.ExecuteTemplate(w, "main", nil)
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		err = ts.ExecuteTemplate(w, "base", nil)
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+func (app *App) VerifyUser(w http.ResponseWriter, r *http.Request) {
+	// w.Write([]byte("Verify username and password from form"))
+	err := r.ParseForm()
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "client side error", http.StatusBadRequest)
+	}
+
+	email := r.PostForm.Get("email")
+	password := r.PostForm.Get("password")
+
+	currentUserID, err := app.Env.users.Verify(email, password)
+	if err == models.ErrInvalidCredentials {
+		log.Print(models.ErrInvalidCredentials)
+		http.Redirect(w, r, "/user/login", http.StatusForbidden)
+		return
+	} else if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+
+	app.SessionManager.Put(r.Context(), "currentUserID", strconv.FormatInt(currentUserID, 10))
+	log.Printf("The currentUserID is: %s", (app.SessionManager.GetString(r.Context(), "currentUserID")))
+	http.Redirect(w, r, "/profile/view/"+strconv.FormatInt(currentUserID, 10), http.StatusSeeOther)
 }

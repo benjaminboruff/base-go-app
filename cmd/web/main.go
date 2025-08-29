@@ -19,7 +19,7 @@ type Env struct {
 		Show(int) (models.User, error)
 		Seed() error
 		Create(models.User) (int64, error)
-		Verify(string, string) (bool, error)
+		Verify(string, string) (int64, error)
 	}
 }
 
@@ -51,10 +51,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// err = env.users.SeedUsers()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
+	err = env.users.Seed()
+	if err != nil {
+		log.Println(err)
+	}
 
 	app := &App{
 		Addr:           ":8080",

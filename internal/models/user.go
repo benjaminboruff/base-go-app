@@ -150,29 +150,30 @@ func (u UserModel) Create(user User) (int64, error) {
 // verify that the user exists and
 // has the correct password
 
-func (u UserModel) Verify(email, password string) (bool, error) {
+func (u UserModel) Verify(email, password string) (int64, error) {
 
 	var id int
 	var hashedPassword string
 
+	log.Printf("email: %s", email)
 	row := u.DB.QueryRow("SELECT id, password FROM users WHERE email = $1", email)
 	err := row.Scan(&id, &hashedPassword)
 
 	if err == sql.ErrNoRows {
-		return false, ErrUserNotFound
+		return 0, ErrUserNotFound
 	} else if err != nil {
-		return false, err
+		return 0, err
 	}
 
 	valid, err := utils.ComparePasswordAndHash(password, hashedPassword)
 
 	if valid != true {
-		return false, ErrInvalidCredentials
+		return 0, ErrInvalidCredentials
 	} else if err != nil {
-		return false, err
+		return 0, err
 	}
 
-	return valid, err
+	return int64(id), err
 }
 
 // Retrieve all user in the

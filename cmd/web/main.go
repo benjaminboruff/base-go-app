@@ -5,6 +5,10 @@ import (
 	"github.com/benjaminboruff/base-go-app/internal/models"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
+	"net/http"
+	"time"
+
+	"github.com/alexedwards/scs/v2"
 )
 
 type Env struct {
@@ -15,11 +19,18 @@ type Env struct {
 		Show(int) (models.User, error)
 		Seed() error
 		Create(models.User) (int64, error)
-		Verify(string, string) (bool, error)
+		Verify(string, string) (int64, error)
 	}
 }
 
 func main() {
+
+	sessionManager := scs.New()
+	sessionManager.Lifetime = 24 * time.Hour
+	sessionManager.Cookie.Name = "base-go-app"
+	sessionManager.Cookie.SameSite = http.SameSiteStrictMode
+	sessionManager.Cookie.HttpOnly = true
+	sessionManager.Cookie.Secure = true
 
 	dsn := "./base-go-app.db"
 	db, err := sql.Open("sqlite3", dsn)
@@ -40,17 +51,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// err = env.users.SeedUsers()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
+	err = env.users.Seed()
+	if err != nil {
+		log.Println(err)
+	}
 
 	app := &App{
-		Addr:     ":8080",
-		Database: db,
-		Env:      env,
-		HTMLDir:  "./ui/html",
-		DistDir:  "./ui/dist",
+		Addr:           ":8080",
+		Database:       db,
+		Env:            env,
+		HTMLDir:        "./ui/html",
+		DistDir:        "./ui/dist",
+		SessionManager: sessionManager,
 	}
 
 	app.RunServer()

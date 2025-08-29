@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{template "title" .}} - Base Go App </title>
+    <title>Home</title>
 
     <!-- Link to the CSS stylesheet and favicon -->
     <link rel="stylesheet" href="/dist/main.css" />
@@ -20,12 +20,14 @@
       href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700"
     />
   </head>
-  <body hx-boost="true">
+  <body >
     <header>
-      <h1><a href="/">Base Go App</a></h1>
+      <h1><a href="/" >Base Go App</a></h1>
     </header>
     {{template "nav" .}}
-    <main>{{template "main" .}}</main>
+    <main id="main">
+    {{template "main" .}}
+    </main>
     <footer>Powered by <a href="https://golang.org/">Go</a></footer>
   </body>
 </html>

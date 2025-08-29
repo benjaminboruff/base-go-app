@@ -1,5 +1,6 @@
-{{define "title"}}Home{{end}} {{/* ************************************** */}}
 {{define "main"}}
+<title>Home</title>
 <h2>Your Profiles</h2>
 <p>You have no profiles!</p>
+<button type="button" hx-get="/user/signup" hx-target="#main" >Sign Up!</button>
 {{end}}

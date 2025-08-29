@@ -7,10 +7,6 @@ import (
 	"strconv"
 )
 
-type PageData struct {
-	Title string
-}
-
 func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "NoneYo")
 

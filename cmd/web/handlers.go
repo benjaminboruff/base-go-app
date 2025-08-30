@@ -61,11 +61,9 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 // ProfileView handler
 func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "NoneYo")
-	msg := app.SessionManager.GetString(r.Context(), "message")
-	log.Println(msg)
 
 	if !app.SessionManager.Exists(r.Context(), "currentUserID") {
-		log.Println("Not logged in!")
+		log.Println("User login required to view Profile")
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
@@ -97,6 +95,7 @@ func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+	return
 }
 
 // ProfileCreate handler
@@ -148,12 +147,10 @@ func (app *App) SignupUser(w http.ResponseWriter, r *http.Request) {
 func (app *App) LoginUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "NoneYo")
 
-	if app.SessionManager.Exists(r.Context(), "currentUserId") {
-		log.Println("Already logged in!")
+	if app.SessionManager.Exists(r.Context(), "currentUserID") {
+		log.Println("User already logged in!")
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
-	} else {
-		log.Println(app.SessionManager.GetString(r.Context(), "message"))
 	}
 
 	TemplateFiles := []string{
@@ -210,4 +207,16 @@ func (app *App) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	app.SessionManager.Put(r.Context(), "currentUserID", strconv.FormatInt(currentUserID, 10))
 	log.Printf("The currentUserID is: %s", (app.SessionManager.GetString(r.Context(), "currentUserID")))
 	http.Redirect(w, r, "/profile/view/"+strconv.FormatInt(currentUserID, 10), http.StatusSeeOther)
+}
+
+func (app *App) LogoutUser(w http.ResponseWriter, r *http.Request) {
+	if !app.SessionManager.Exists(r.Context(), "currentUserID") {
+		log.Println("User not logged-in!")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	app.SessionManager.Remove(r.Context(), "currentUserID")
+	log.Println("User logged out")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

@@ -4,4 +4,7 @@
 <p>First name: {{.FirstName}}</p>
 <p>Middle name: {{.MiddleName}}</p>
 <p>Last name: {{.LastName}}</p>
+<button hx-post="/user/logout" hx-target="#main" hx-replace-url="/">
+  Logout
+</button>
 {{end}}

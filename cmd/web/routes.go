@@ -28,6 +28,7 @@ func (app *App) Routes() http.Handler {
 	mux.HandleFunc("GET /user/signup", app.SignupUser)
 	mux.HandleFunc("GET /user/login", app.LoginUser)
 	mux.HandleFunc("POST /user/login", app.VerifyUser)
+	mux.HandleFunc("POST /user/logout", app.LogoutUser)
 
 	return app.SessionManager.LoadAndSave(mux)
 }

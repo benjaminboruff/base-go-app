@@ -16,7 +16,7 @@ type Env struct {
 		All() ([]models.User, error)
 		Close()
 		CreateTable() error
-		Show(int) (models.User, error)
+		Get(int) (models.User, error)
 		Seed() error
 		Create(models.User) (int64, error)
 		Verify(string, string) (int64, error)

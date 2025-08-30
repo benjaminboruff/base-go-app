@@ -209,7 +209,7 @@ func (u UserModel) All() ([]User, error) {
 // and return the user
 // data if found
 
-func (u UserModel) Show(id int) (User, error) {
+func (u UserModel) Get(id int) (User, error) {
 
 	var user User
 

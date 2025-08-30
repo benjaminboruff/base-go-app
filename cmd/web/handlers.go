@@ -84,7 +84,7 @@ func (app *App) ProfileView(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id, err := strconv.Atoi(r.PathValue("id"))
-	user, err := app.Env.users.Show(id)
+	user, err := app.Env.users.Get(id)
 	if err != nil || id < 1 {
 		log.Print(err.Error())
 		http.NotFound(w, r)

@@ -1,10 +1,11 @@
 {{define "main"}}
-<title>User</title>
-<h2>User: {{.Email}}</h2>
-<p>First name: {{.FirstName}}</p>
-<p>Middle name: {{.MiddleName}}</p>
-<p>Last name: {{.LastName}}</p>
-<button hx-post="/user/logout" hx-target="#main" hx-replace-url="/">
-  Logout
-</button>
+<div _="on load set document.title to 'User'">
+  <h2>User: {{.Email}}</h2>
+  <p>First name: {{.FirstName}}</p>
+  <p>Middle name: {{.MiddleName}}</p>
+  <p>Last name: {{.LastName}}</p>
+  <button hx-post="/user/logout" hx-target="#main" hx-replace-url="/">
+    Logout
+  </button>
+</div>
 {{end}}

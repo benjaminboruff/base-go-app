@@ -19,15 +19,15 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700"
     />
+
+    <script src="https://unpkg.com/hyperscript.org@0.9.14"></script>
   </head>
-  <body >
+  <body>
     <header>
-      <h1><a href="/" >Base Go App</a></h1>
+      <h1><a href="/">Base Go App</a></h1>
     </header>
     {{template "nav" .}}
-    <main id="main">
-    {{template "main" .}}
-    </main>
+    <main id="main">{{template "main" .}}</main>
     <footer>Powered by <a href="https://golang.org/">Go</a></footer>
   </body>
 </html>
